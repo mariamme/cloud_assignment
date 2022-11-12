@@ -1,0 +1,21 @@
+import math
+from flask import Flask, jsonify
+app = Flask(__name__)
+
+@app.route('/numericalintegralservice/<float:lower>/<float:upper>')
+def numericalintegralservice(lower,upper):
+    N = [10, 100, 100, 1000, 10000, 100000, 1000000]
+    integrals=[]
+    for n in N:
+        dx=(upper-lower)/float(n)
+        integral=0.0
+        for i in range (0,n):
+            xip12=dx*(float(i)+0.5)
+            dI=abs(math.sin(xip12))*dx
+            integral=integral+dI
+        integrals.append(integral)
+        
+    return jsonify(integrals)
+
+if __name__ == '__main__':
+    app.run()  
