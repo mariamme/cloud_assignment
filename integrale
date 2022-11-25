@@ -17,5 +17,3 @@ def numericalintegralservice(lower,upper):
         
     return jsonify(integrals)
 
-if __name__ == '__main__':
-    app.run()  
