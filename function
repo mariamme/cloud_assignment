@@ -1,0 +1,39 @@
+import logging
+import math
+import azure.functions as func
+import json
+def integral(lower,upper):
+    N = [10, 100, 100, 1000, 10000, 100000, 1000000]
+    integrals=[]
+    for n in N:
+        dx=(float(upper)-float(lower))/float(n)
+        integral=0.0
+        for i in range (0,n):
+            xip12=dx*(float(i)+0.5)
+            dI=abs(math.sin(xip12))*dx
+            integral=integral+dI
+        integrals.append(integral)
+    return json.dumps(integrals)
+
+def main(req: func.HttpRequest) -> func.HttpResponse:
+    logging.info('Python HTTP trigger function processed a request.')
+
+    upper = req.params.get('upper')
+    lower = req.params.get('lower')
+    if not upper:
+        try:
+            req_body = req.get_json()
+        except ValueError:
+            pass
+        else:
+            upper = req_body.get('upper')
+            lower = req_body.get('lower')
+
+    if upper:
+        i=integral(lower,upper)
+        return func.HttpResponse(i)
+    else:
+        return func.HttpResponse(
+             "This HTTP triggered function executed successfully. Pass an upper in the query string or in the request body for a personalized response.",
+             status_code=200
+        )
